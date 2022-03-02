@@ -1,13 +1,11 @@
 import * as React from "react"
 import { Link } from "gatsby"
 
-import Layout from "../components/layout"
-import Seo from "../components/seo"
+import Layout from "../components/ui/layout"
 
 const UsingSSR = ({ serverData }) => {
   return (
     <Layout>
-      <Seo title="Using SSR" />
       <h1>SSR page</h1>
       <img
         style={{ width: "300px" }}
