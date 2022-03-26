@@ -1,4 +1,4 @@
-## Jamstack Commerce
+## Jamstack Commerce - frontend
 
 Projeto JAMStack para desenvolvimento de um ecommerce desde o início usando tecnologias React, GatsbyJs, GraphQL, Strapi CMS e muitas outras tecnologias
 
