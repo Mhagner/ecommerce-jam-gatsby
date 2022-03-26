@@ -1,3 +1,7 @@
+## Jamstack Commerce
+
+Projeto JAMStack para desenvolvimento de um ecommerce desde o início usando tecnologias React, GatsbyJs, GraphQL, Strapi CMS e muitas outras tecnologias
+
 <!-- AUTO-GENERATED-CONTENT:START (STARTER) -->
 <p align="center">
   <a href="https://www.gatsbyjs.com">
