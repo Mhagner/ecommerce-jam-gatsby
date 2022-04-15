@@ -59,10 +59,21 @@ export default function Header({ categories }) {
 
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-  const routes = [...categories, { attributes: { name: 'Contact us' }, id: 'contact', link: '/contact' }];
+  const activeIndex = () => {
+    const found = routes.indexOf(
+      routes.filter(
+        ({ attributes: { name }, link }) =>
+          (link || `/${name.toLowerCase()}`) === window.location.pathname
+      )[0]
+    )
+
+    return found === -1 ? 0 : found
+  }
+
+  const routes = [...categories, { attributes: { name: 'Contact us' }, id: 'contact', link: '/contact' }]
 
   const tabs = (
-    <Tabs value={0} classes={{ indicator: handle.coloredIndicator, root: handle.tabs }}>
+    <Tabs value={activeIndex()} classes={{ indicator: handle.coloredIndicator, root: handle.tabs }}>
       {routes.map(route => (
         <Tab
           component={Link}
@@ -84,9 +95,19 @@ export default function Header({ categories }) {
       classes={{ paper: handle.drawer }}
     >
       <List disablePadding>
-        {routes.map(route => (
-          <ListItem divider button key={route.id}>
-            <ListItemText classes={{ primary: handle.listItemText }} primary={route.attributes.name} />
+        {routes.map((route, index) => (
+          <ListItem
+            selected={activeIndex() === index}
+            component={Link}
+            to={route.link || `/${route.attributes.name.toLowerCase()}`}
+            divider
+            button
+            key={route.id}
+          >
+            <ListItemText
+              classes={{ primary: handle.listItemText }}
+              primary={route.attributes.name}
+            />
           </ListItem>
         ))}
       </List>
@@ -94,7 +115,7 @@ export default function Header({ categories }) {
   )
 
   const actions = [
-    { icon: search, alt: 'search', visible: true },
+    { icon: search, alt: 'search', visible: true, onClick: () => console.log('search') },
     { icon: cart, alt: 'cart', visible: true, link: '/cart' },
     { icon: account, alt: 'account', visible: !matchesMD, link: '/account' },
     { icon: menu, alt: 'menu', visible: matchesMD, onClick: () => setDrawerOpen(true) },
@@ -103,7 +124,7 @@ export default function Header({ categories }) {
   return (
     <AppBar color='transparent' elevation={0}>
       <Toolbar>
-        <Button classes={{ root: handle.logoContainer }}>
+        <Button component={Link} to="/" classes={{ root: handle.logoContainer }}>
           <Typography variant="h1">
             <span className={handle.logoText}>VAR</span> X
           </Typography>
@@ -112,8 +133,17 @@ export default function Header({ categories }) {
         {actions.map(action => {
           if (action.visible) {
             return (
-              <IconButton component={Link} to={action.link} key={action.alt}>
-                <img src={action.icon} alt={action.alt} className={handle.icon} onClick={action.onClick} />
+              <IconButton
+                onClick={action.onClick}
+                component={action.onClick ? undefined : Link}
+                to={action.onClick ? undefined : action.link}
+                key={action.alt}
+              >
+                <img
+                  src={action.icon}
+                  alt={action.alt}
+                  className={handle.icon}
+                />
               </IconButton>
             )
           }
