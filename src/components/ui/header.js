@@ -62,7 +62,7 @@ export default function Header({ categories }) {
   const activeIndex = () => {
     const found = routes.indexOf(
       routes.filter(
-        ({ attributes: { name }, link }) =>
+        ({ name, link }) =>
           (link || `/${name.toLowerCase()}`) === window.location.pathname
       )[0]
     )
@@ -70,17 +70,17 @@ export default function Header({ categories }) {
     return found === -1 ? 0 : found
   }
 
-  const routes = [...categories, { attributes: { name: 'Contact us' }, id: 'contact', link: '/contact' }]
+  const routes = [...categories, { name: 'Contact us', id: 'contact', link: '/contact' }]
 
   const tabs = (
     <Tabs value={activeIndex()} classes={{ indicator: handle.coloredIndicator, root: handle.tabs }}>
       {routes.map(route => (
         <Tab
           component={Link}
-          to={route.link || `/${route.attributes.name.toLowerCase()}`}
+          to={route.link || `/${route.name.toLowerCase()}`}
           classes={{ root: handle.tab }}
           key={route.id}
-          label={route.attributes.name} />
+          label={route.name} />
       ))}
     </Tabs>
   )
@@ -99,14 +99,14 @@ export default function Header({ categories }) {
           <ListItem
             selected={activeIndex() === index}
             component={Link}
-            to={route.link || `/${route.attributes.name.toLowerCase()}`}
+            to={route.link || `/${route.name.toLowerCase()}`}
             divider
             button
             key={route.id}
           >
             <ListItemText
               classes={{ primary: handle.listItemText }}
-              primary={route.attributes.name}
+              primary={route.name}
             />
           </ListItem>
         ))}

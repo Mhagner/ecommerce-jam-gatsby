@@ -15,16 +15,10 @@ import Footer from "./footer"
 const Layout = ({ children }) => {
   const data = useStaticQuery(graphql`
     query GetCategories {
-      allStrapiCategory {
-        edges {
-          node {
-            data {
-              attributes {
-                name
-              }
-              id
-            }
-          }
+      allStrapiCategories {
+        nodes {
+          name
+          id
         }
       }
     }
@@ -32,7 +26,7 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      <Header categories={data.allStrapiCategory.edges[0].node.data} />
+      <Header categories={data.allStrapiCategories.nodes} />
       <div style={{ marginBottom: "10rem" }} />
       <main>{children}</main>
       <Footer />
