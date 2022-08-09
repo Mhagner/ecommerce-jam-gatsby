@@ -99,7 +99,7 @@ export default function PromotionalProducts() {
           <Grid item>
             {selectedSlide === index ? (
               <Typography variant="h1" classes={{ root: classes.productName }}>
-                {node.name.split(" ")[0]}
+                {node.name.split(" ")[2]}
               </Typography>
             ) : null}
           </Grid>
