@@ -1,10 +1,14 @@
-import React from 'react'
-import { Typography, Grid, Button } from '@material-ui/core'
+import React, { useState } from 'react'
+import clsx from 'clsx'
+import { Typography, Grid, Button, Chip } from '@material-ui/core'
 import { useStaticQuery, graphql } from 'gatsby'
 import { makeStyles } from '@material-ui/core/styles'
 
 import featuredAdornment from '../../../images/featured-adornment.svg'
 import frame from '../../../images/product-frame-grid.svg'
+import explore from '../../../images/explore.svg'
+
+import Rating from './Rating'
 
 const useStyles = makeStyles(theme => ({
   background: {
@@ -13,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     width: '100%',
-    height: '95rem',
+    height: '98rem',
     padding: '0 2.5rem',
   },
   featured: {
@@ -30,19 +34,48 @@ const useStyles = makeStyles(theme => ({
     boxSizing: 'border-box',
     boxShadow: theme.shadows[5],
     position: 'absolute',
+    zIndex: 1
   },
   slide: {
     backgroundColor: theme.palette.primary.main,
     height: '20rem',
     width: '24.5rem',
+    zIndex: 0,
+    transition: 'transform 0.5s ease',
+    padding: '1rem 2rem'
+  },
+  slideLeft: {
+    transform: 'translate(-24.5rem, 0px)',
+  },
+  slideRight: {
+    transform: 'translate(24.5rem, 0px)',
   },
   productContainer: {
-    margin: '5rem 0'
+    margin: '5rem 0',
+  },
+  exploreContainer: {
+    marginTop: 'auto',
+  },
+  exploreButton: {
+    textTransform: 'none'
+  },
+  exploreIcon: {
+    height: '1rem',
+    marginLeft: '1rem'
+  },
+  chipLabel: {
+    ...theme.typography.h5
+  },
+  chipRoot: {
+    backgroundColor: theme.palette.secondary.main
   }
 }))
 
 export default function FeaturedProductions() {
   const classes = useStyles()
+  const [expanded, setExpanded] = useState(null)
+
+
   const data = useStaticQuery(graphql`
     query GetFeatured {
       allStrapiProducts(filter: {featured: {eq: true}}) {
@@ -81,13 +114,48 @@ export default function FeaturedProductions() {
               alignItems='center'
             >
               <Grid item>
-                <Button classes={{ root: classes.frame }}>
+                <Button
+                  onClick={() => expanded === i ? setExpanded(null) : setExpanded(i)}
+                  classes={{ root: classes.frame }}>
                   <img
                     className={classes.featured}
                     src={process.env.GATSBY_STRAPI_URL + node.variants[1].images[0].url}
-                    alt={node.name} />
+                    alt={node.name}
+                  />
                 </Button>
-                <Grid container direction="column" classes={{ root: classes.slide }}>
+                <Grid container direction="column" classes={{
+                  root: clsx(classes.slide, {
+                    [classes.slideLeft]: expanded === i && alignment === 'flex-end',
+                    [classes.slideRight]: expanded === i &&
+                      (alignment === 'flex-start' || alignment === 'center')
+                  })
+                }}>
+                  <Grid item>
+                    <Typography variant="h4">
+                      {node.name.split(" ")[2]}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Rating number={4} />
+                  </Grid>
+                  <Grid item>
+                    <Chip
+                      classes={{ root: classes.chipRoot, label: classes.chipLabel }}
+                      label={`$${node.variants[1].price}`}
+                    />
+                  </Grid>
+                  <Grid item classes={{ root: classes.exploreContainer }}>
+                    <Button classes={{ root: classes.exploreButton }}>
+                      <Typography variant="h5">
+                        Details
+                      </Typography>
+                      <img
+                        src={explore}
+                        alt="go to product details"
+                        className={classes.exploreIcon}
+                      />
+                    </Button>
+                  </Grid>
 
                 </Grid>
               </Grid>
@@ -95,6 +163,6 @@ export default function FeaturedProductions() {
           )
         )
       })}
-    </Grid>
+    </Grid >
   )
 }
